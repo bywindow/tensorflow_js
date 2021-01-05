@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    </head>
+    <body>
+        <script>
+            var temp = [10,20 ,30,40,50];
+            var sold = [31, 32, 42, 46, 57];
+            var cause = tf.tensor(temp);
+            var myResult = tf.tensor(sold);
+
+            var x = tf.input({ shape: [1] });
+            var y = tf.layers.dense({ units: 1 }).apply(x);
+            var model = tf.model({ inputs: x, outputs: y});
+            var cp = { optimizer: tf.train.adam(), loss: tf.losses.meanSquaredError }
+            model.compile(cp);
+
+            var fp = { epochs : 150 }
+            model.fit(cause, myResult, fp).then(function (result){
+                var pred = model.predict(cause);
+                pred.print();
+            });
+
+            var nextTemp = [15, 25, 35, 45, 55];
+            var nextCause = tf.tensor(nextTemp);
+            var nextResult = model.predict(nextCause);
+            nextResult.print();
+        </script>
+    </body>
+</html>
